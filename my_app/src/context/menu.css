@@ -1,0 +1,12 @@
+.main_div{
+    background-color: darkgoldenrod;
+    /* padding: 100px; */
+    margin: auto;
+    height: 60px;
+}
+.active_class{
+    color: black;
+    padding: 100px;
+    margin: 20px 20px;
+    font-size: 40px;
+}

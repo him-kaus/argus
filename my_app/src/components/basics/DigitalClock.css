@@ -1,0 +1,13 @@
+.heading {
+    text-align: center;
+    margin: 30px 30px;
+    background-color: bisque;
+    color: black;
+    /* display: flex; */
+    width: auto;
+}
+
+.container{
+    text-align: center;
+    background-color: blue;
+}

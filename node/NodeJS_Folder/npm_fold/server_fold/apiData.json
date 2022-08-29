@@ -1,0 +1,76 @@
+[
+    {
+        "sessionTimestamp": "1511237978194",
+        "appVersion": "1.1",
+        "sessionDuration": "90759",
+  "eventOffset": "31430",
+  "carrier": "monkey brains",
+        "deviceIdentifiers": {
+        "idfv": "26B46C28-E0A0-4150-B59A-C8ECC03C6BBD"
+  },
+  "deviceModel": "iPhone 6",
+  "deviceSubModel": "iPhone7,2",
+  "countryISO": "US",
+  "eventName": "ViewBoard",
+  "eventParameters": {
+    "boardTitle": "Around the House Nov17",
+    "boardUuid": "61ab3320-aa28-46a0-b09f-1754d5fc1b61"
+  },
+  "userId": "",
+  "gender": "Unknown",
+  "birthYear": "",
+  "latitude": "",
+  "longitude": "",
+  "sessionProperties": "{}"
+      },
+      {
+  "sessionTimestamp": "1511237978194",
+  "appVersion": "1.1",
+  "sessionDuration": "90759",
+  "eventOffset": "31430",
+  "carrier": "monkey brains",
+  "deviceIdentifiers": {
+     "idfv": "26B46C28-E0A0-4150-B59A-C8ECC03C6BBD"
+  },
+  "deviceModel": "iPhone 6",
+  "deviceSubModel": "iPhone7,2",
+  "countryISO": "US",
+  "eventName": "ShareBoard",
+  "eventParameters": {
+     "boardTitle": "Around the House Nov17",
+     "boardUuid": "61ab3320-aa28-46a0-b09f-1754d5fc1b61"
+  },
+  "userId": "",
+  "gender": "Unknown",
+  "birthYear": "",
+  "latitude": "",
+  "longitude": "",
+  "sessionProperties": "{}"
+},
+{
+  "sessionTimestamp": "1511259749336",
+  "appVersion": "1.1",
+  "sessionDuration": "166793",
+  "eventOffset": "16630",
+  "carrier": "Verizon",
+  "deviceIdentifiers": {
+     "idfv": "96C13D79-D1B6-5489-C67D-E9FDF16A7ADF"
+  },
+  "deviceModel": "iPhone X",
+  "deviceSubModel": "iPhone10,3",
+  "countryISO": "US",
+  "eventName": "DeleteBoard",
+  "eventParameters": {
+    "boardTitle": "My best board",
+    "boardUuid": "94ad1963-ab31-64d4-f19d-1963e5ab6d71"
+},
+  "userId": "",
+  "gender": "Unknown",
+  "birthYear": "",
+  "latitude": "",
+  "longitude": "",
+  "sessionProperties": {
+    "pushNotificationId": "08a808f-ad2890"
+    }
+}
+]
