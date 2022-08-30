@@ -136,6 +136,20 @@ app.get('/api',async(req,res)=>{
     }
 })
 
+app.delete("/deleteApi/:id",async(req,res)=>{
+    try{
+        const _id = req.params.id;
+        const deleteData = await Crud.findByIdAndRemove(_id)
+        if(!deleteData){
+            return res.status(404).send("page not found")
+        }else{
+            return res.status(200).send({message:"deleted",deleteData:deleteData})
+        }
+    }catch(e){
+        res.status(500).send(e)
+    }
+})
+
 app.listen(port,()=>{
     console.log("listen")
 })

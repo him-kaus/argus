@@ -32,17 +32,22 @@ const Crud = () => {
         } else {
             alert("Invalid Entries")
         }
-        // setUser2({
-        //     fname: '',
-        //     lname: '',
-        //     email: ''
-        // })
+        getItem()
+        setUser2({
+            fname: '',
+            lname: '',
+            email: ''
+        })
     }
     const edititem = () => {
         console.log("Add")
     }
-    const deletedItem = () => {
-        console.log("Add")
+    const deleteItem = (id) => {
+        // console.log("Add")
+        axios.delete(`http://localhost:8000/deleteApi/${id}`).then(res=>{
+            // console.log(res.data.deleteData._id)
+            getItem()
+        })
     }
     const getItem = () => {
         axios.get("http://localhost:8000/api").then(res => {
@@ -92,10 +97,12 @@ const Crud = () => {
                                             <tr>
                                 <th scope="row">{index+1}</th>
                                 <td>{ele.fname}</td>
+                                {/* <td>{ele._id}</td> */}
                                 <td>{ele.lname}</td>
                                 <td>{ele.email}</td>
+                                <td><button className='btn btn-primary'>Show</button></td>
                                 <td><button className='btn btn-success'>Edit</button></td>
-                                {/* <td><button className='btn btn-danger'>Delete</button></td> */}
+                                <td><button className='btn btn-danger' onClick={()=>deleteItem(ele._id)}>Delete</button></td>
                             </tr>
                                         </>
                                     )
