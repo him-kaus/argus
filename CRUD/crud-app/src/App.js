@@ -1,18 +1,26 @@
-import React from 'react'
+import React, { useState } from 'react'
 import Homepage from './components/homepage/Homepage'
 import Register from './components/register/Register'
 import Login from './components/login/Login'
-import {BrowserRouter,Routes ,Route} from 'react-router-dom'
+import {BrowserRouter,Routes ,Route,Navigate} from 'react-router-dom'
 import Crud from './components/CRUD/Crud'
+import Header from './components/Header'
 
 const App = () => {
+  const [user,setLoginUser] = useState({})
   return (
+    
     <>
-    <Crud />
+    
     <BrowserRouter>
+    <Header />
     <Routes>
-      <Route path="/" element={<Homepage />} />
-      <Route path="/login" element={<Login />} />
+    <Route path="/" element={
+      ()=>{
+        user && user._id ? <Crud />:<Login setLoginUser={setLoginUser}/>
+      }
+    } />
+      <Route path="/login" element={<Login setLoginUser={setLoginUser}/>} />
       <Route path="/register" element={<Register />} />
       <Route path="/crud" element={<Crud />} />
     </Routes>

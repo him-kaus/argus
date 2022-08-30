@@ -17,6 +17,7 @@ mongoose.connect("mongodb://127.0.0.1:27017/signup").then(()=>{
     console.log(e)
 })
 
+//NEW SCHEMA FOR SIGNUP FORM
 const signupSchema = new mongoose.Schema({
     name:{
         type:String,
@@ -45,6 +46,32 @@ const signupSchema = new mongoose.Schema({
 })
 
 const User = new mongoose.model("User",signupSchema)
+
+//SECOND SCHEMA FOR CRUD ENTRIES
+
+const crudSchema = new mongoose.Schema({
+    fname:{
+        type:String,
+        required:true,
+        minLength:3,
+        maxLength:20
+    },
+    lname:{
+        type:String,
+        required:true,
+        minLength:3,
+        maxLength:20
+    },
+    email:{
+        type:String,
+        required:true,
+        unique:true
+    }
+})
+
+const Crud = new mongoose.model("Crud",crudSchema)
+
+
 
 app.post("/register",(req,res)=>{
 
@@ -84,6 +111,29 @@ app.post("/login",(req,res)=>{
             res.send({message:"You Are Not Registerd"})
         }
     })
+})
+
+app.post("/additem",(req,res)=>{
+    const {fname,lname,email} = req.body;
+    const crudDetails = new Crud({
+        fname,
+        lname,
+        email
+    })
+    crudDetails.save().then(()=>{
+        res.status(201).send("Successfully saved")
+    }).catch((_e)=>{
+        res.status(500).send("Server Error 2")
+    })
+})
+
+app.get('/api',async(req,res)=>{
+    try{
+        const data = await Crud.find()
+        res.send({message:"done",data:data})
+    }catch(e){
+        console.log(e)
+    }
 })
 
 app.listen(port,()=>{

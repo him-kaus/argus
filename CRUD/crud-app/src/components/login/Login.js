@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import crud from '../CRUD/Crud'
 import './login.css'
 
-const Login = () => {
+const Login = ({setLoginUser}) => {
 
   const navigate = useNavigate()
   const [user,setUser] =  useState({
@@ -24,7 +24,16 @@ const Login = () => {
     // e.prventDefaulter();
     const {email,password} = user
     if(email&&password){
-      axios.post("http://localhost:8000/login",user).then(res=>alert(res.data.message))
+      axios.post("http://localhost:8000/login",user).then(res=>{
+        alert(res.data.message)
+        setLoginUser(res.data.user)
+        if(res.data.user===undefined){
+          navigate('/register')
+        }else{
+          navigate('/Crud')
+        }
+        
+      })
     }else{
       alert("Invalid Entries")
     }
@@ -32,7 +41,8 @@ const Login = () => {
       email:"",
       password:""
     })
-    navigate('/crud')
+    
+    // navigate('/crud')
     
   }
   const route1 = () => {
