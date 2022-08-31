@@ -1,13 +1,19 @@
 import React, { useState,useEffect } from 'react'
+import { NavLink, useNavigate } from "react-router-dom";
 import './style.css'
 import Button from '@mui/material/Button';
 import Input from '@mui/material/Input';
 import Tooltip from '@mui/material/Tooltip';
 import AddCircleOutlinedIcon from '@mui/icons-material/AddCircleOutlined';
 import axios from 'axios';
+import Homepage from '../homepage/Homepage';
 
 
 const Crud = () => {
+    const navigate = useNavigate()
+
+    // const [showUser,setShowUser] = useState([])
+
     const [getuserdata,setUserdata] = useState([])
 
     const [toggle, setToggle] = useState(false)
@@ -51,10 +57,27 @@ const Crud = () => {
     }
     const getItem = () => {
         axios.get("http://localhost:8000/api").then(res => {
-            
+            // console.log(res.showData)
            setUserdata(res.data.data)
         })
     }
+
+    const showData = (id) => {
+        // axios.get(`http://localhost:8000/showApi/${id}`).then(res=>{
+        // const showuser = res.data.showData
+        //   console.log(showuser)
+        //   if(res.data._id){
+        //     return (
+        //         <>
+        //             <Homepage showuser={showuser}/>
+        //         </>
+        //     )
+        //   }
+         
+        // })
+        navigate('/home')
+      }
+
 
     useEffect(() => {
       getItem()
@@ -100,7 +123,7 @@ const Crud = () => {
                                 {/* <td>{ele._id}</td> */}
                                 <td>{ele.lname}</td>
                                 <td>{ele.email}</td>
-                                <td><button className='btn btn-primary'>Show</button></td>
+                                <NavLink to={`home/${ele._id}`}><td><button className='btn btn-primary' onClick={()=>showData(ele._id)}>Show</button></td></NavLink>
                                 <td><button className='btn btn-success'>Edit</button></td>
                                 <td><button className='btn btn-danger' onClick={()=>deleteItem(ele._id)}>Delete</button></td>
                             </tr>

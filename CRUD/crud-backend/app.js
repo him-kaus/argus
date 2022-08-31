@@ -150,6 +150,20 @@ app.delete("/deleteApi/:id",async(req,res)=>{
     }
 })
 
+app.get("/showApi/:id",async(req,res)=>{
+    try{
+        const _id = req.params.id;
+        const showData = await Crud.findById(_id)
+        if(!showData){
+            return res.status(404).json("DataBase Is Empty")
+        }else{
+            return res.status(200).json({message:"successfully show",showData:showData})
+        }
+    }catch(e){
+        res.status(500).json("Internal Servar Error")
+    }
+})
+
 app.listen(port,()=>{
     console.log("listen")
 })

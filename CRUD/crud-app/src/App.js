@@ -20,9 +20,10 @@ const App = () => {
         user && user._id ? <Crud />:<Login setLoginUser={setLoginUser}/>
       }
     } />
-      <Route path="/login" element={<Login setLoginUser={setLoginUser}/>} />
+      <Route exact path="/login" element={<Login setLoginUser={setLoginUser}/>} />
       <Route path="/register" element={<Register />} />
       <Route path="/crud" element={<Crud />} />
+      <Route exact path="crud/home/:id" element={<Homepage />} />
     </Routes>
   </BrowserRouter>
     </>
