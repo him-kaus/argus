@@ -50,7 +50,7 @@ const Homepage = () => {
       <div class="card mt-4">
         <img src="img.jpg" alt="John" style={{ width: '100%' }} />
         {
-          getuser.forEach((ele,id)=>{
+          getuser.map((ele,id)=>{
             return (
               <>
               <h1>{id+1}</h1>

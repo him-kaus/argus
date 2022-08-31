@@ -22,7 +22,8 @@ const App = () => {
     } />
       <Route exact path="/login" element={<Login setLoginUser={setLoginUser}/>} />
       <Route path="/register" element={<Register />} />
-      <Route path="/crud" element={<Crud />} />
+      <Route path="/crud" element={<Crud />}/>
+      <Route path="/crud/:id" element={<Crud />} />
       <Route exact path="crud/home/:id" element={<Homepage />} />
     </Routes>
   </BrowserRouter>

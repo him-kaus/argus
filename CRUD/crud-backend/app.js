@@ -164,6 +164,22 @@ app.get("/showApi/:id",async(req,res)=>{
     }
 })
 
+app.patch("/updateApi/:id",async(req,res)=>{
+    try{
+        const {_id} = req.params.id;
+        const updatedUser = await Crud.findByIdAndUpdate(_id)
+        if(!updatedUser){
+            return res.status(404).send("database is empty")
+        }else{
+            return res.status(200).send(_id,req.body,{
+                new:true
+            })
+        }
+    }catch(e){
+        res.status(500).send("server error")
+    }
+})
+
 app.listen(port,()=>{
     console.log("listen")
 })

@@ -1,5 +1,5 @@
 import React, { useState,useEffect } from 'react'
-import { NavLink, useNavigate } from "react-router-dom";
+import { NavLink, useNavigate, useParams } from "react-router-dom";
 import './style.css'
 import Button from '@mui/material/Button';
 import Input from '@mui/material/Input';
@@ -10,6 +10,7 @@ import Homepage from '../homepage/Homepage';
 
 
 const Crud = () => {
+    const {_id} = useParams()
     const navigate = useNavigate()
 
     // const [showUser,setShowUser] = useState([])
@@ -45,9 +46,19 @@ const Crud = () => {
             email: ''
         })
     }
-    const edititem = () => {
+    const editItem = (id) => {
         console.log("Add")
+        axios.get(`http://localhost:8000/showApi/${id}`).then(res=>{
+            setUser2({
+                fname: res.data.showData.fname,
+                lname:res.data.showData.lname,
+                email:res.data.showData.email
+            })
+            setToggle(true)
+        })
     }
+
+    
     const deleteItem = (id) => {
         // console.log("Add")
         axios.delete(`http://localhost:8000/deleteApi/${id}`).then(res=>{
@@ -82,6 +93,12 @@ const Crud = () => {
     useEffect(() => {
       getItem()
     }, [])
+
+    const editActually = () =>{
+        axios.patch(`http://localhost:8000/updateApi/${_id}`).then(res=>{
+            console.log(res.data)
+        })
+    }
     
     return (
         <>
@@ -97,8 +114,14 @@ const Crud = () => {
                     <Input type='email' placeholder='✋ Write Your Email' className='inp' name='email' value={user2.email} onChange={handle} />
                     <p></p>
 
-                    <div>{toggle ? (<Tooltip title='Edit'><i className="fa111 fa11 fa1 far fa-edit" onClick={addItem}></i></Tooltip>) :
-                        <span data-testid='btn12' className='plus'><Tooltip title='Add'><AddCircleOutlinedIcon onClick={addItem} /></Tooltip></span>}</div>
+                    {/* <div>{toggle ? (<Tooltip title='Edit'><i className="fa111 fa11 fa1 far fa-edit" onClick={addItem}></i></Tooltip>) :
+                        <span data-testid='btn12' className='plus'><Tooltip title='Add'><AddCircleOutlinedIcon onClick={addItem} /></Tooltip></span>}</div> */}
+
+                    <div>
+                        {
+                            toggle ? <button className='btn btn-primary' onClick={editActually} style={{width:'70px'}}>Edit</button> : <button className='btn btn-success' style={{width:'70px'}} onClick={addItem}>Add</button> 
+                        }
+                    </div>
 
                     {/* //SHOW THE LIST  */}
                     <table class="table">
@@ -123,8 +146,8 @@ const Crud = () => {
                                 {/* <td>{ele._id}</td> */}
                                 <td>{ele.lname}</td>
                                 <td>{ele.email}</td>
-                                <NavLink to={`home/${ele._id}`}><td><button className='btn btn-primary' onClick={()=>showData(ele._id)}>Show</button></td></NavLink>
-                                <td><button className='btn btn-success'>Edit</button></td>
+                                <NavLink to={`home/${ele._id}`}><td><button className='btn btn-primary' onClick={showData}>Show</button></td></NavLink>
+                                <NavLink to={`${ele._id}`}><td><button className='btn btn-success' onClick={editItem}>Edit</button></td></NavLink>
                                 <td><button className='btn btn-danger' onClick={()=>deleteItem(ele._id)}>Delete</button></td>
                             </tr>
                                         </>
