@@ -10,7 +10,7 @@ import Homepage from '../homepage/Homepage';
 
 
 const Crud = () => {
-    const {_id} = useParams()
+    const {id} = useParams("")
     const navigate = useNavigate()
 
     // const [showUser,setShowUser] = useState([])
@@ -94,10 +94,14 @@ const Crud = () => {
       getItem()
     }, [])
 
-    const editActually = () =>{
-        axios.patch(`http://localhost:8000/updateApi/${_id}`).then(res=>{
-            console.log(res.data)
-        })
+    const editActually = async(e) =>{
+        const { fname, lname, email } = user2
+        if (fname && lname && email) {
+            await axios.patch(`http://localhost:8000/updateApi/${id}`, user2).then(res => console.log(res.data))
+        } else {
+            alert("Invalid Entries")
+        }
+        getItem()
     }
     
     return (
@@ -147,7 +151,10 @@ const Crud = () => {
                                 <td>{ele.lname}</td>
                                 <td>{ele.email}</td>
                                 <NavLink to={`home/${ele._id}`}><td><button className='btn btn-primary' onClick={showData}>Show</button></td></NavLink>
-                                <NavLink to={`${ele._id}`}><td><button className='btn btn-success' onClick={editItem}>Edit</button></td></NavLink>
+                                {
+                                    !toggle ? <NavLink to={`${ele._id}`}><td><button className='btn btn-success' onClick={()=>editItem(ele._id)}>Edit</button></td></NavLink>:null
+                                }
+                                
                                 <td><button className='btn btn-danger' onClick={()=>deleteItem(ele._id)}>Delete</button></td>
                             </tr>
                                         </>

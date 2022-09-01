@@ -165,18 +165,20 @@ app.get("/showApi/:id",async(req,res)=>{
 })
 
 app.patch("/updateApi/:id",async(req,res)=>{
+    const _id = req.params.id;
+
+        const updatedUser = await Crud.findByIdAndUpdate(_id,req.body,{
+            new:true
+        })
     try{
-        const {_id} = req.params.id;
-        const updatedUser = await Crud.findByIdAndUpdate(_id)
+        
         if(!updatedUser){
-            return res.status(404).send("database is empty")
+            return res.status(404).json("database is empty")
         }else{
-            return res.status(200).send(_id,req.body,{
-                new:true
-            })
+            return res.status(200).json({message:"success22",data:updatedUser})
         }
     }catch(e){
-        res.status(500).send("server error")
+        res.status(500).json("server error")
     }
 })
 
