@@ -32,6 +32,13 @@ const Crud = () => {
         })
     }
 
+    const getItem = () => {
+        axios.get("http://localhost:8000/api").then(res => {
+            // console.log(res.showData)
+           setUserdata(res.data.data)
+        })
+    }
+
     const addItem = () => {
         const { fname, lname, email } = user2
         if (fname && lname && email) {
@@ -39,20 +46,22 @@ const Crud = () => {
         } else {
             alert("Invalid Entries")
         }
-        getItem()
+        
         setUser2({
             fname: '',
             lname: '',
             email: ''
         })
+        getItem()
     }
     const editItem = (id) => {
         console.log("Add")
         axios.get(`http://localhost:8000/showApi/${id}`).then(res=>{
+            console.log(res.data.showData[0].fname)
             setUser2({
-                fname: res.data.showData.fname,
-                lname:res.data.showData.lname,
-                email:res.data.showData.email
+                fname: res.data.showData[0].fname,
+                lname:res.data.showData[0].lname,
+                email:res.data.showData[0].email
             })
             setToggle(true)
         })
@@ -66,12 +75,7 @@ const Crud = () => {
             getItem()
         })
     }
-    const getItem = () => {
-        axios.get("http://localhost:8000/api").then(res => {
-            // console.log(res.showData)
-           setUserdata(res.data.data)
-        })
-    }
+    
 
     const showData = (id) => {
         // axios.get(`http://localhost:8000/showApi/${id}`).then(res=>{
@@ -101,7 +105,15 @@ const Crud = () => {
         } else {
             alert("Invalid Entries")
         }
+        
+        setUser2({
+            fname:"",
+            lname:"",
+            email:""
+        })
+        setToggle(false)
         getItem()
+        navigate('/crud')
     }
     
     return (

@@ -81,7 +81,7 @@ app.post("/register",(req,res)=>{
             res.send("user Already Exist")
         }else{
             const user1 = new User({
-                name,
+                name:name,
                 email,
                 password,
                 rePassword
@@ -100,7 +100,7 @@ app.post("/register",(req,res)=>{
 app.post("/login",(req,res)=>{
     // res.end("hii from backend")
     const {email, password} = req.body
-    User.findOne({email:email},(err,user) => {
+    User.findOne({email:email},(_err,user) => {
         if(user){
             if(password===user.password){
                 res.send({message:"successfully login" ,user:user})
@@ -151,13 +151,14 @@ app.delete("/deleteApi/:id",async(req,res)=>{
 })
 
 app.get("/showApi/:id",async(req,res)=>{
+    const _id = req.params.id;
+    const showData = await Crud.findById(_id)
+    console.log(showData)
     try{
-        const _id = req.params.id;
-        const showData = await Crud.findById(_id)
         if(!showData){
             return res.status(404).json("DataBase Is Empty")
         }else{
-            return res.status(200).json({message:"successfully show",showData:showData})
+            return res.status(200).json({message:"successfully show",showData:[showData]})
         }
     }catch(e){
         res.status(500).json("Internal Servar Error")

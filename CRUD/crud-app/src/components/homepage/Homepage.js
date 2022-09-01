@@ -1,40 +1,26 @@
 import axios from 'axios'
 import React,{useEffect, useState} from 'react'
-import { useParams } from 'react-router-dom'
+import { Navigate, useNavigate, useParams } from 'react-router-dom'
 import './hm.css'
 const Homepage = () => {
   const {id} = useParams("")
+
+  const navigate = useNavigate()
   const [getuser,setGetuser] = useState([])
   
-  // const getData = async() => {
-  //   try{
-  //     axios.get(`http://localhost:8000/showApi/${id}`).then(function(res){
-        
-  //     })
-  //   }catch(e){
-  //     console.log("invalid")
-  //   }
-    
-  // }
-
   const getData = async(e) => {
-    // e.prevantDefaulter()
-    const res = await fetch(`http://localhost:8000/showApi/${id}`,{
-      method:"GET",
-      headers:{
-        "Content-Type":"application/json"
-      }
-    });
-    const data = await res.json()
-    // console.log(data)
-    if(!data){
-      console.error("not found")
-    }else{
-      setGetuser(data)
-      console.log("set")
-    }
+    
+    await axios.get(`http://localhost:8000/showApi/${id}`).then(res=>{
+      setGetuser(res.data.showData)
+      console.log(getuser)
+      // e.preventDefault()
+    })
+  }
+  const back =()=>{
+    navigate('/crud')
   }
 
+  // getData()
   useEffect(() => {
     getData()
   })
@@ -53,9 +39,9 @@ const Homepage = () => {
           getuser.map((ele,id)=>{
             return (
               <>
-              <h1>{id+1}</h1>
-      <p class="title">CEO & Founder, Example</p>
-      <p>Harvard University</p>
+              <h1>{ele.fname}</h1>
+      <p class="title">{ele.lname}</p>
+      <p>Email : {ele.email}</p>
       <a href="/"><i class="fa fa-dribbble"></i></a>
       <a href="/"><i class="fa fa-twitter"></i></a>
       <a href="/"><i class="fa fa-linkedin"></i></a>
@@ -64,7 +50,9 @@ const Homepage = () => {
             )
           })
         }
-        <p><button>Contact</button></p>
+        <p><button>Contact</button>
+        </p>
+        <p><button onClick={back}>Back</button></p>
       </div>
      
     </>
