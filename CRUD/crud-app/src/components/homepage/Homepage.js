@@ -23,7 +23,7 @@ const Homepage = () => {
   // getData()
   useEffect(() => {
     getData()
-  })
+  },[])
   
   // {console.log(getuser)}
   return (

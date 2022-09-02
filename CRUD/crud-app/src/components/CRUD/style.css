@@ -1,4 +1,6 @@
-
+body{
+    background-color: aliceblue;
+}
 .whole{
     background-color: #cdab8f;
     height: 600px;

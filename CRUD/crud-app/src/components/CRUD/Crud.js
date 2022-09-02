@@ -127,7 +127,7 @@ const Crud = () => {
                 <div className="cont2">
                     <Input type="text" placeholder='✋ Write Your First Name' className='inp' name='fname' value={user2.fname} onChange={handle} />
                     <Input type="text" placeholder='✋ Write Your Last Name' className='inp' name='lname' value={user2.lname} onChange={handle} />
-                    <Input type='email' placeholder='✋ Write Your Email' className='inp' name='email' value={user2.email} onChange={handle} />
+                    <Input type='email' style={{backgroundColor:'purple'}} placeholder='✋ Write Your Email' className='inp' name='email' value={user2.email} onChange={handle} />
                     <p></p>
 
                     {/* <div>{toggle ? (<Tooltip title='Edit'><i className="fa111 fa11 fa1 far fa-edit" onClick={addItem}></i></Tooltip>) :
