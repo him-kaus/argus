@@ -19,6 +19,7 @@ const Crud = () => {
 
     const [toggle, setToggle] = useState(false)
     const [user2, setUser2] = useState({
+        userId:"",
         fname: "",
         lname: "",
         email: ""
@@ -40,7 +41,7 @@ const Crud = () => {
     }
 
     const addItem = () => {
-        const { fname, lname, email } = user2
+        const { fname, lname, email,userId } = user2
         if (fname && lname && email) {
             axios.post("http://localhost:8000/additem", user2).then(res => console.log(res))
         } else {

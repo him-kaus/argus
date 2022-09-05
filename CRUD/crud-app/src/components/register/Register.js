@@ -1,37 +1,64 @@
 import React, { useState } from 'react'
 import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
+import { useFormik } from 'formik'
+import { signUpSchema } from '../schemas/signUpSchema'
 import './register.css'
+
+
+const initialValues = {
+  name:'',
+  email:'',
+  password:'',
+  rePassword:''
+}
 
 const Register = () => {
   const navigate = useNavigate()
 
-  const [user,setUser] =  useState({
-    name:"",
-    email:"",
-    password:"",
-    rePassword:""
-  })
+  // const [user,setUser] =  useState({
+  //   name:"",
+  //   email:"",
+  //   password:"",
+  //   rePassword:""
+  // })
 
-  const handle = (e) => {
-    const {name,value} = e.target
-    setUser({
-      ...user,
-      [name] : value
-    })
-  }
+  // const handle = (e) => {
+  //   const {name,value} = e.target
+  //   setUser({
+  //     ...user,
+  //     [name] : value
+  //   })
+  // }
 
-  const register = () => {
-    const {name,email,password,rePassword} = user
+
+  const register = (value) => {
+    const {name,email,password,rePassword} = value
 
     if(name&&email&&password&&password===rePassword){
-      axios.post("http://localhost:8000/register",user)
+      axios.post("http://localhost:8000/register",value)
     }else{
       alert("Invalid Entries")
     }
     navigate('/login')
 
   }
+
+  const { values, errors, handleChange, touched ,handleBlur,handleSubmit } = useFormik({
+    initialValues,
+    validationSchema:signUpSchema,
+    
+    onSubmit:(value,action)=>{
+        
+        console.log(JSON.stringify(value))
+        register(value)
+        localStorage.setItem("Details",JSON.stringify(value))
+        action.resetForm() 
+    }
+})
+
+
+  
   return (
     <>
 <div class="main-w3layouts wrapper">
@@ -39,10 +66,14 @@ const Register = () => {
 		<div class="main-agileinfo">
 			<div class="agileits-top">
 				<form action="#" method="post">
-					<input class="text" type="text" name="name" value={user.name} onChange={handle} placeholder="Username" required="" />
-					<input class="text email" type="email" name="email" value={user.email} onChange={handle} placeholder="Email" required="" /> 
-					<input class="text" type="password" name="password" value={user.password} onChange={handle} placeholder="Password" required="" />
-					<input class="text w3lpass" type="password" name="rePassword" value={user.rePassword} onChange={handle} placeholder="Confirm Password" required="" />
+					<input class="text" type="text" value={values.name} name='name' onChange={handleChange} autoComplete='off' onBlur={handleBlur} placeholder="Username" />
+          {errors.name && touched.name? <p style={{color:'red'}} className='form-error'>{errors.name}</p>:null}
+					<input class="text email" type="email" value={values.email} name='email' onChange={handleChange} autoComplete='off' onBlur={handleBlur} placeholder="Email" /> 
+          {errors.email && touched.email ? <p style={{color:'red'}} className='form-error'>{errors.email}</p>:null}
+					<input class="text" type="password" value={values.password} name='password' onChange={handleChange} autoComplete='off' onBlur={handleBlur} placeholder="Password" required="" />
+          {errors.password && touched.password ? <p style={{color:'red'}} className='form-error'>{errors.password}</p>:null}
+					<input class="text w3lpass" type="password" value={values.rePassword} name='rePassword' onChange={handleChange} autoComplete='off' onBlur={handleBlur} placeholder="Confirm Password" required="" />
+          {errors.rePassword && touched.rePassword ? <p style={{color:'red'}} className='form-error'>{errors.rePassword}</p>:null}
 					<div class="wthree-text">
 						<label class="anim">
 							<input type="checkbox" class="checkbox" required="" />
@@ -50,7 +81,7 @@ const Register = () => {
 						</label>
 						<div class="clear"> </div>
 					</div>
-					<input type="submit" onClick={register} value="SIGNUP" />
+					<input type="submit" onClick={handleSubmit} value="SIGNUP" />
 				</form>
 				<p>Don't have an Account? <a href="#"> Login Now!</a></p>
 			</div>

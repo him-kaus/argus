@@ -5,6 +5,7 @@ const authenticate = require('./middleware/Authenticate')
 const dotenv = require('dotenv')
 const jwt = require('jsonwebtoken')
 const cors = require('cors')
+const Schema = mongoose.Schema;
 
 const app = express()
 app.use(express.json())
@@ -58,25 +59,26 @@ const signupSchema = new mongoose.Schema({
     ]
 })
 
-signupSchema.methods.generateToken = async function () {
-    try {
-        let token = jwt.sign({ _id: this._id }, `${process.env.SECRET_KEY}`)
-        this.tokens = this.tokens.concat({ token: token })
-        await this.save()
-        return token;
-    } catch (e) {
-        console.log(e)
-    }
-}
+// signupSchema.methods.generateToken = async function () {
+//     try {
+//         let token = jwt.sign({ _id: this._id }, `${process.env.SECRET_KEY}`)
+//         this.tokens = this.tokens.concat({ token: token })
+//         await this.save()
+//         return token;
+//     } catch (e) {
+//         console.log(e)
+//     }
+// }
 
 const User = new mongoose.model("User", signupSchema)
 
 
 //SECOND SCHEMA FOR CRUD ENTRIES
 
-const crudSchema = new mongoose.Schema({
+const crudSchema = new Schema({
     userId: {
-        type: mongoose.Schema.Types.ObjectId, ref: 'User',
+        type: Schema.Types.ObjectId, 
+        $ref: 'User'
     },
     fname: {
         type: String,
@@ -129,16 +131,16 @@ app.post("/login", async (req, res) => {
     // res.end("hii from backend")
 
     try{
-        let token;
+        // let token;
         const { email, password } = req.body
     const userLogin = await User.findOne({ email: email })
     if (userLogin) {
-        token = await userLogin.generateToken()
-        console.log(token)
-        res.cookie("jwtoken",token,{
-            expires:new Date(Date.now()+2389200000),
-            httpOnly:true
-        })
+        // token = await userLogin.generateToken()
+        // console.log(token)
+        // res.cookie("jwtoken",token,{
+        //     expires:new Date(Date.now()+2389200000),
+        //     httpOnly:true
+        // })
         if (password === userLogin.password) {
             res.send({ message: "successfully login", user: userLogin })
         } else {
@@ -166,11 +168,15 @@ app.post("/login", async (req, res) => {
 
 app.post("/additem", (req, res) => {
     const { fname, lname, email } = req.body;
+    console.log(req.body)
     const crudDetails = new Crud({
+        
         fname,
         lname,
         email
     })
+    let userId = User._id
+    console.log(userId)
     crudDetails.save().then(() => {
         res.status(201).send("Successfully saved")
     }).catch((_e) => {
@@ -201,7 +207,7 @@ app.delete("/deleteApi/:id", async (req, res) => {
     }
 })
 
-app.get("/showApi/:id", authenticate ,async (req, res) => {
+app.get("/showApi/:id", async (req, res) => {
     const _id = req.params.id;
     const showData = await Crud.findById(_id)
     console.log(showData)

@@ -58,9 +58,9 @@ const Login = ({setLoginUser}) => {
 
     <form>
       <input type="text" id="login" class="fadeIn second" placeholder="Email" name='email' value={user.email} onChange={handle}/>
-      <input type="text" id="password" class="fadeIn third" placeholder="password" name='password' value={user.password} onChange={handle}/>
-      <button type="button" class="btn btn-primary btn-lg" onClick={login}>Login</button>
-      <button type="button" class="btn btn-primary btn-lg" onClick={route1}>Register</button>
+      <input type="password" id="password" class="fadeIn second" placeholder="password" name='password' value={user.password} onChange={handle}/>
+      <button type="button" class="btn btn-primary" onClick={login}>Login</button>
+      <button type="button" class="mt-2 btn btn-primary" onClick={route1}>Register</button>
     </form>
 
     
