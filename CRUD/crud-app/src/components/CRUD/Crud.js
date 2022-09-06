@@ -7,10 +7,13 @@ import Tooltip from '@mui/material/Tooltip';
 import AddCircleOutlinedIcon from '@mui/icons-material/AddCircleOutlined';
 import axios from 'axios';
 import Homepage from '../homepage/Homepage';
+import Header from '../Header';
 
 
-const Crud = () => {
+const Crud = ({setLogin}) => {
     const { id } = useParams("")
+
+    const [error,setError] = useState('')
     const navigate = useNavigate()
 
     // const [showUser,setShowUser] = useState([])
@@ -38,6 +41,7 @@ const Crud = () => {
         if(!email){
             navigate('/login')
         }else{
+            // setLogin(false)
             axios.get(`http://localhost:8000/api/${email}`).then(res => {
             setUserdata(res.data.data)
         })
@@ -45,20 +49,28 @@ const Crud = () => {
     }
 
     const addItem = () => {
-        const { fname, lname, email, userId } = user2
-        if (fname && lname && email) {
-            axios.post("http://localhost:8000/additem", user2).then(res => console.log(res))
-        } else {
-            alert("Invalid Entries")
-        }
+        const { fname, lname, email} = user2
 
-        setUser2({
-            userId: '',
-            fname: '',
-            lname: '',
-            email: ''
-        })
-        getItem()
+        const emailFromLocalStorage = JSON.parse(localStorage.getItem('email2'))
+        console.log(typeof(emailFromLocalStorage))
+        console.log(typeof(user2.email))
+        if(emailFromLocalStorage!==user2.email){
+            setError("Email Didn't Match With Teacher's ID")
+        }else{
+            if (fname && lname && email) {
+                axios.post("http://localhost:8000/additem", user2).then(res => console.log(res))
+            } else {
+                alert("Invalid Entries")
+            }
+    
+            setUser2({
+                userId: '',
+                fname: '',
+                lname: '',
+                email: ''
+            })
+            getItem()
+        }
     }
     const editItem = (id) => {
         console.log("Add")
@@ -124,7 +136,7 @@ const Crud = () => {
 
     return (
         <>
-
+            <Header />
             <div className='whole'>
                 <div className='container'>
                     <h1 id='h11'>Students - List</h1>
@@ -134,7 +146,7 @@ const Crud = () => {
                     <Input type="text" placeholder='✋ Write Your First Name' name='fname' value={user2.fname} onChange={handle} /><br />
                     <Input type="text" placeholder='✋ Write Your Last Name' name='lname' value={user2.lname} onChange={handle} /><br />
                     <Input type='text' placeholder='✋ Confirm Teacher ID' name='email' value={user2.email} onChange={handle} />
-
+                    {error ? <p style={{color:'red'}} className='form-error'>{error}</p>:null}
 
                     {/* <div>{toggle ? (<Tooltip title='Edit'><i className="fa111 fa11 fa1 far fa-edit" onClick={addItem}></i></Tooltip>) :
                         <span data-testid='btn12' className='plus'><Tooltip title='Add'><AddCircleOutlinedIcon onClick={addItem} /></Tooltip></span>}</div> */}
@@ -152,7 +164,7 @@ const Crud = () => {
                                 <th scope="col">ID</th>
                                 <th scope="col">First</th>
                                 <th scope="col">Last</th>
-                                <th scope="col">Email</th>
+                                {/* <th scope="col">Teacher ID</th> */}
                             </tr>
                         </thead>
                         <tbody>
@@ -167,7 +179,7 @@ const Crud = () => {
                                                 <td>{ele.fname}</td>
                                                 {/* <td>{ele._id}</td> */}
                                                 <td>{ele.lname}</td>
-                                                <td>{ele.email}</td>
+                                                {/* <td>{ele.email}</td> */}
                                                 <td><NavLink to={`home/${ele._id}`}><button className='btn btn-primary' onClick={showData}>Show</button></NavLink></td>
                                                 {
                                                     !toggle ? <td><NavLink to={`${ele._id}`}><button className='btn btn-success' onClick={() => editItem(ele._id)}>Edit</button></NavLink></td> : null

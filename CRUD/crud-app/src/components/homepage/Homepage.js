@@ -9,13 +9,13 @@ const Homepage = () => {
   const [getuser,setGetuser] = useState([])
   
   const getData = async(e) => {
-    
+    const email2 = JSON.parse(localStorage.getItem('email2')) 
     await axios.get(`http://localhost:8000/showApi/${id}`).then(res=>{
       setGetuser(res.data.showData)
       console.log(getuser)
       // e.preventDefault()
     })
-  }
+  }                     
   const back =()=>{
     navigate('/crud')
   }
@@ -34,14 +34,14 @@ const Homepage = () => {
      <h2 className='heading'>Hii, This Is Your Profile Page</h2>
      </div>
       <div class="card mt-4">
-        <img src="img.jpg" alt="John" style={{ width: '100%' }} />
+        <img src="" alt="Profile" style={{ width: '100%' }} />
         {
           getuser.map((ele,id)=>{
             return (
               <>
-              <h1>{ele.fname}</h1>
-      <p class="title">{ele.lname}</p>
-      <p>Email : {ele.email}</p>
+              <h1 style={{color:'black'}}>{ele.fname}</h1>
+      <p className="title">{ele.lname}</p>
+      <p className='mt-3'>Email : {ele.email}</p>
       <a href="/"><i class="fa fa-dribbble"></i></a>
       <a href="/"><i class="fa fa-twitter"></i></a>
       <a href="/"><i class="fa fa-linkedin"></i></a>
@@ -50,9 +50,9 @@ const Homepage = () => {
             )
           })
         }
-        <p><button>Contact</button>
+        <p className='mt-3'><button>Contact</button>
         </p>
-        <p><button onClick={back}>Back</button></p>
+        <p className='mt-3'><button onClick={back}>Back</button></p>
       </div>
      
     </>

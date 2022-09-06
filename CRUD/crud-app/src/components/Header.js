@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom'
 const Header = () => {
     const navigate = useNavigate()
 
-    const [logout,setLogoout] = useState(false)
+    const [logout,setLogoout] = useState(true)
 
     const [login2,setLogin2] = useState(true)
 
@@ -33,11 +33,11 @@ const Header = () => {
 
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul class="navbar-nav mr-auto">
-                        {
+                        {/* {
                             login2 ? <li class="nav-item active">
                             <a class="nav-link" style={{color:'white'}} onClick={login}>Login</a>
                         </li>: null
-                        }
+                        } */}
 
                         {
                             logout ? <li class="nav-item">
