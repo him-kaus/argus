@@ -1,9 +1,13 @@
 import axios from 'axios'
-import React from 'react'
+import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
 const Header = () => {
     const navigate = useNavigate()
+
+    const [logout,setLogoout] = useState(false)
+
+    const [login2,setLogin2] = useState(true)
 
     const logOut = () => {
         // console.log('hii')
@@ -11,6 +15,12 @@ const Header = () => {
         axios.get('http://localhost:8000/logout').then(res=>{
             
         })
+        navigate('login')
+    }
+
+    const login = () => {
+        setLogoout(true)
+        setLogin2(false)
         navigate('login')
     }
     return (
@@ -23,12 +33,18 @@ const Header = () => {
 
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul class="navbar-nav mr-auto">
-                        <li class="nav-item active">
-                            <a class="nav-link" href="/login" style={{color:'white'}} onClick={()=>{navigate("/login")}}>Login</a>
-                        </li>
-                        <li class="nav-item">
+                        {
+                            login2 ? <li class="nav-item active">
+                            <a class="nav-link" style={{color:'white'}} onClick={login}>Login</a>
+                        </li>: null
+                        }
+
+                        {
+                            logout ? <li class="nav-item">
                             <a class="nav-link" onClick={logOut} style={{color:'white'}}>Logout</a>
-                        </li>
+                        </li>: null
+                        }
+                        
                     
                         
                     </ul>

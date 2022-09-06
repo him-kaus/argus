@@ -54,8 +54,8 @@ const Login = ({setLoginUser}) => {
     <div class="wrapper fadeInDown">
   <div id="formContent">
    
-    <div class="fadeIn first">
-      <img src="http://danielzawadzki.com/codepen/01/icon.svg" id="icon" alt="User Icon" />
+    <div class="fadeIn first center">
+      <p>Teacher Login</p>
     </div>
 
     <form>

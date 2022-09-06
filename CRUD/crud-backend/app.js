@@ -218,17 +218,14 @@ app.post("/additem",async(req, res) => {
 })
 
 app.get('/api/:email', async (req, res) => {
-    // console.log(req.params.email)
-    // console.log(req.body.email)
-
     try {
         const email2 = req.params.email
-        let getUser = await User.find({})
-        // console.log(getUser)
-        const data = await Crud.find({}).where('email').equals(email2)
-        // let getUser = data.userId
-        // console.log(getUser)
-        res.send({ message: "done", data: data })
+        if(!email2){
+            res.status(404).send({message:"Login required"})
+        }else{
+            const data = await Crud.find({}).where('email').equals(email2)
+            res.send({ data: data })
+        }
     } catch (e) {
         console.log(e)
     }

@@ -62,7 +62,7 @@ const Register = () => {
   return (
     <>
 <div class="main-w3layouts wrapper">
-		<h1>Creative SignUp Form</h1>
+		<h1>Teacher Registration Form</h1>
 		<div class="main-agileinfo">
 			<div class="agileits-top">
 				<form action="#" method="post">
@@ -83,7 +83,7 @@ const Register = () => {
 					</div>
 					<input type="submit" onClick={handleSubmit} value="SIGNUP" />
 				</form>
-				<p>Don't have an Account? <a href="#"> Login Now!</a></p>
+				<p>Already have an Account? <a href="/login"> Login Now!</a></p>
 			</div>
 		</div>
 		
