@@ -22,6 +22,8 @@ const Login = ({setLoginUser}) => {
   const login = (e) => {
     // e.prventDefaulter();
     const {email,password} = user
+    console.log(user)
+    localStorage.setItem('email2',JSON.stringify(user.email))
     if(email&&password){
       axios.post("http://localhost:8000/login",user).then(res=>{
         alert(res.data.message)

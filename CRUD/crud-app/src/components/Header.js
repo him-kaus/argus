@@ -1,8 +1,18 @@
+import axios from 'axios'
 import React from 'react'
 import { useNavigate } from 'react-router-dom'
 
 const Header = () => {
     const navigate = useNavigate()
+
+    const logOut = () => {
+        // console.log('hii')
+        localStorage.clear();
+        axios.get('http://localhost:8000/logout').then(res=>{
+            
+        })
+        navigate('login')
+    }
     return (
         <>
             <nav class="navbar navbar-expand-lg navbar-light bg-dark">
@@ -17,7 +27,7 @@ const Header = () => {
                             <a class="nav-link" href="/login" style={{color:'white'}} onClick={()=>{navigate("/login")}}>Login</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" style={{color:'white'}} href="/">Logout</a>
+                            <a class="nav-link" onClick={logOut} style={{color:'white'}}>Logout</a>
                         </li>
                     
                         

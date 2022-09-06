@@ -56,16 +56,30 @@ const signupSchema = new mongoose.Schema({
                 required: true
             }
         }
-    ]
+    ],
+    
+    
+    
 })
 
-// signupSchema.methods.generateToken = async function () {
-//     try {
-//         let token = jwt.sign({ _id: this._id }, `${process.env.SECRET_KEY}`)
-//         this.tokens = this.tokens.concat({ token: token })
-//         await this.save()
-//         return token;
-//     } catch (e) {
+signupSchema.methods.generateToken = async function () {
+    try {
+        
+        let token = jwt.sign({ _id: this._id }, `${process.env.SECRET_KEY}`)
+        this.tokens = this.tokens.concat({ token: token })
+        await this.save()
+        return token;
+    } catch (e) {
+        console.log(e)
+    }
+}
+
+// signupSchema.methods.generateId = async function(user){
+//     try{
+//         console.log(user)
+//         console.log(this._id)
+//         return this._id
+//     }catch(e){
 //         console.log(e)
 //     }
 // }
@@ -77,25 +91,24 @@ const User = new mongoose.model("User", signupSchema)
 
 const crudSchema = new Schema({
     userId: {
-        type: Schema.Types.ObjectId, 
-        $ref: 'User'
+        type: String
     },
     fname: {
         type: String,
-        required: true,
+        // required: true,
         minLength: 3,
         maxLength: 20
     },
     lname: {
         type: String,
-        required: true,
+        // required: true,
         minLength: 3,
         maxLength: 20
     },
     email: {
         type: String,
-        required: true,
-        unique: true
+        // required: true,
+        // unique: true
     }
 })
 
@@ -103,27 +116,31 @@ const Crud = new mongoose.model("Crud", crudSchema)
 
 
 
-app.post("/register", (req, res) => {
+app.post("/register", async(req, res) => {
 
     const { name, email, password, rePassword } = req.body;
-    User.findOne({ email: email }, (_err, user1) => {
-        if (user1) {
-            res.send("user Already Exist")
-        } else {
-            const user1 = new User({
-                name: name,
-                email,
-                password,
-                rePassword
-            })
-            user1.save().then(() => {
-                res.status(201).send("Created SuccessFully")
-            }).catch((_e) => {
-                res.status(500).send("Server Error")
-            })
-        }
-    })
-
+    try{
+        const user1 = await User.findOne({email:email})
+    if (user1) {
+        res.send("user Already Exist")
+    } else {
+        const user2 = new User({
+            name: name,
+            email,
+            password,
+            rePassword,
+            
+        })
+        console.log(user2)
+        await user2.save().then(() => {
+            res.status(201).send("Created SuccessFully")
+        }).catch((_e) => {
+            res.status(500).send("Server Error")
+        })
+    }
+    }catch(e){
+        console.log(e)
+    }
 
 })
 
@@ -131,16 +148,31 @@ app.post("/login", async (req, res) => {
     // res.end("hii from backend")
 
     try{
-        // let token;
+        const person = {
+            name: "Obaseki Nosa",
+            location: "Lagos",
+        }
+
+        let token;
         const { email, password } = req.body
+        // console.log(JSON.stringify(req.body))
+        // localStorage.setItem(req.body.email)
     const userLogin = await User.findOne({ email: email })
+    console.log(userLogin._id)
     if (userLogin) {
-        // token = await userLogin.generateToken()
-        // console.log(token)
-        // res.cookie("jwtoken",token,{
-        //     expires:new Date(Date.now()+2389200000),
-        //     httpOnly:true
-        // })
+
+
+        // const crudDet = new Crud({
+        //     userId:userLogin._id
+        // }).save()
+
+
+        token = await userLogin.generateToken()
+        console.log(token)
+        res.cookie("jwtoken",token,{
+            expires:new Date(Date.now()+2389200000),
+            httpOnly:true
+        })
         if (password === userLogin.password) {
             res.send({ message: "successfully login", user: userLogin })
         } else {
@@ -166,27 +198,36 @@ app.post("/login", async (req, res) => {
     // })
 })
 
-app.post("/additem", (req, res) => {
+app.post("/additem",async(req, res) => {
     const { fname, lname, email } = req.body;
-    console.log(req.body)
+    // console.log(req.body)
+    let userLogin2 = await User.findOne({email:email})
+    // console.log(userLogin2)
     const crudDetails = new Crud({
-        
-        fname,
-        lname,
-        email
+        userId:userLogin2._id,
+        fname:fname,
+        lname:lname,
+        email:email
     })
-    let userId = User._id
-    console.log(userId)
-    crudDetails.save().then(() => {
+    console.log(crudDetails)
+    await crudDetails.save().then(() => {
         res.status(201).send("Successfully saved")
     }).catch((_e) => {
         res.status(500).send("Server Error 2")
     })
 })
 
-app.get('/api', async (req, res) => {
+app.get('/api/:email', async (req, res) => {
+    // console.log(req.params.email)
+    // console.log(req.body.email)
+
     try {
-        const data = await Crud.find()
+        const email2 = req.params.email
+        let getUser = await User.find({})
+        // console.log(getUser)
+        const data = await Crud.find({}).where('email').equals(email2)
+        // let getUser = data.userId
+        // console.log(getUser)
         res.send({ message: "done", data: data })
     } catch (e) {
         console.log(e)
@@ -209,6 +250,7 @@ app.delete("/deleteApi/:id", async (req, res) => {
 
 app.get("/showApi/:id", async (req, res) => {
     const _id = req.params.id;
+    // console.log(req.params)
     const showData = await Crud.findById(_id)
     console.log(showData)
     try {
@@ -238,6 +280,10 @@ app.patch("/updateApi/:id", async (req, res) => {
     } catch (e) {
         res.status(500).json("server error")
     }
+})
+
+app.get("/logout",(req,res)=>{
+    res.status(201).send("logout")
 })
 
 app.listen(port, () => {

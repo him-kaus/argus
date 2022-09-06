@@ -34,7 +34,9 @@ const Crud = () => {
     }
 
     const getItem = () => {
-        axios.get("http://localhost:8000/api").then(res => {
+        const email = JSON.parse(localStorage.getItem('email2'))
+        // console.log(JSON.parse(email))
+        axios.get(`http://localhost:8000/api/${email}`).then(res => {
             // console.log(res.showData)
            setUserdata(res.data.data)
         })
@@ -49,6 +51,7 @@ const Crud = () => {
         }
         
         setUser2({
+            userId:'',
             fname: '',
             lname: '',
             email: ''
