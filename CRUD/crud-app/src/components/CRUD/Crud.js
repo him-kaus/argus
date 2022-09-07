@@ -102,7 +102,7 @@ const Crud = ({setLogin}) => {
 
     useEffect(() => {
         getItem()
-    },)
+    },[])
 
     const editActually = async (e) => {
         const { fname, lname, email,mobile } = user2
@@ -128,7 +128,7 @@ const Crud = ({setLogin}) => {
             <Header />
             <div className='whole'>
                 <div className='container'>
-                    <h1 id='h11'>Students - List</h1>
+                    <h1 id='h11' data-testid='text'>Students - List</h1>
 
                 </div>
                 <div className="cont2 mt-3">

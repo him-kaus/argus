@@ -12,7 +12,7 @@ const App = () => {
   return (
     
     <>
-    
+    <h1>hii</h1>
     <BrowserRouter>
     <Routes>
       <Route exact path='/' element={<Landing />}/>
