@@ -15,7 +15,7 @@ app.use(express.urlencoded())
 
 const port = process.env.PORT || 8000
 
-dotenv.config({path:'./config.env'})
+dotenv.config({ path: './config.env' })
 
 mongoose.connect("mongodb://127.0.0.1:27017/signup").then(() => {
     console.log("connected")
@@ -57,14 +57,14 @@ const signupSchema = new mongoose.Schema({
             }
         }
     ],
-    
-    
-    
+
+
+
 })
 
 signupSchema.methods.generateToken = async function () {
     try {
-        
+
         let token = jwt.sign({ _id: this._id }, `${process.env.SECRET_KEY}`)
         this.tokens = this.tokens.concat({ token: token })
         await this.save()
@@ -73,16 +73,6 @@ signupSchema.methods.generateToken = async function () {
         console.log(e)
     }
 }
-
-// signupSchema.methods.generateId = async function(user){
-//     try{
-//         console.log(user)
-//         console.log(this._id)
-//         return this._id
-//     }catch(e){
-//         console.log(e)
-//     }
-// }
 
 const User = new mongoose.model("User", signupSchema)
 
@@ -109,6 +99,10 @@ const crudSchema = new Schema({
         type: String,
         // required: true,
         // unique: true
+    },
+    mobile: {
+        type: Number,
+        min: 10,
     }
 })
 
@@ -116,98 +110,71 @@ const Crud = new mongoose.model("Crud", crudSchema)
 
 
 
-app.post("/register", async(req, res) => {
+app.post("/register", async (req, res) => {
 
     const { name, email, password, rePassword } = req.body;
-    try{
-        const user1 = await User.findOne({email:email})
-    if (user1) {
-        res.send("user Already Exist")
-    } else {
-        const user2 = new User({
-            name: name,
-            email,
-            password,
-            rePassword,
-            
-        })
-        console.log(user2)
-        await user2.save().then(() => {
-            res.status(201).send("Created SuccessFully")
-        }).catch((_e) => {
-            res.status(500).send("Server Error")
-        })
-    }
-    }catch(e){
+    try {
+        const user1 = await User.findOne({ email: email })
+        if (user1) {
+            res.send("user Already Exist")
+        } else {
+            const user2 = new User({
+                name: name,
+                email,
+                password,
+                rePassword,
+
+            })
+            console.log(user2)
+            await user2.save().then(() => {
+                res.status(201).send("Created SuccessFully")
+            }).catch((_e) => {
+                res.status(500).send("Server Error")
+            })
+        }
+    } catch (e) {
         console.log(e)
     }
 
 })
 
 app.post("/login", async (req, res) => {
-    // res.end("hii from backend")
 
-    try{
-        const person = {
-            name: "Obaseki Nosa",
-            location: "Lagos",
-        }
+    try {
 
         let token;
         const { email, password } = req.body
-        // console.log(JSON.stringify(req.body))
-        // localStorage.setItem(req.body.email)
-    const userLogin = await User.findOne({ email: email })
-    console.log(userLogin._id)
-    if (userLogin) {
+        const userLogin = await User.findOne({ email: email })
+        console.log(userLogin._id)
+        if (userLogin) {
 
+            token = await userLogin.generateToken()
+            console.log(token)
+            res.cookie("jwtoken", token, {
+                expires: new Date(Date.now() + 2389200000),
+                httpOnly: true
+            })
+            if (password === userLogin.password) {
+                res.send({ message: "successfully login", user: userLogin })
+            } else {
+                res.send({ message: "Password didnt match" })
+            }
 
-        // const crudDet = new Crud({
-        //     userId:userLogin._id
-        // }).save()
-
-
-        token = await userLogin.generateToken()
-        console.log(token)
-        res.cookie("jwtoken",token,{
-            expires:new Date(Date.now()+2389200000),
-            httpOnly:true
-        })
-        if (password === userLogin.password) {
-            res.send({ message: "successfully login", user: userLogin })
-        } else {
-            res.send({ message: "Password didnt match" })
         }
-
-    }
-    }catch(e){
+    } catch (e) {
         res.status(500).send(e)
     }
-    // User.findOne({email:email},async(_err,user) => {
-    //     let token;
-    //     if(user){
-    //         if(password===user.password){
-    //             token = await User.generateToken();
-    //             res.send({message:"successfully login" ,user:user})
-    //         }else{
-    //             res.send({message:"Password didnt match"})
-    //         }
-    //     }else{
-    //         res.send({message:"You Are Not Registerd"})
-    //     }
-    // })
 })
 
-app.post("/additem",async(req, res) => {
-    const { fname, lname, email } = req.body;
-    // console.log(req.body)
-    let userLogin2 = await User.findOne({email:email})
-    // console.log(userLogin2)
+app.post("/additem", async (req, res) => {
+    const { fname, lname, email, mobile } = req.body;
+    let userLogin2 = await User.findOne({ email: email })
     const crudDetails = new Crud({
-        userId:userLogin2._id,
-        fname:fname,
-        lname:lname,
-        email:email
+        userId: userLogin2._id,
+        fname: fname,
+        lname: lname,
+        email: email,
+        mobile: mobile
     })
     console.log(crudDetails)
     await crudDetails.save().then(() => {
@@ -220,9 +187,9 @@ app.post("/additem",async(req, res) => {
 app.get('/api/:email', async (req, res) => {
     try {
         const email2 = req.params.email
-        if(!email2){
-            res.status(404).send({message:"Login required"})
-        }else{
+        if (!email2) {
+            res.status(404).send({ message: "Login required" })
+        } else {
             const data = await Crud.find({}).where('email').equals(email2)
             res.send({ data: data })
         }
@@ -247,7 +214,6 @@ app.delete("/deleteApi/:id", async (req, res) => {
 
 app.get("/showApi/:id", async (req, res) => {
     const _id = req.params.id;
-    // console.log(req.params)
     const showData = await Crud.findById(_id)
     console.log(showData)
     try {
@@ -279,7 +245,7 @@ app.patch("/updateApi/:id", async (req, res) => {
     }
 })
 
-app.get("/logout",(req,res)=>{
+app.get("/logout", (req, res) => {
     res.status(201).send("logout")
 })
 

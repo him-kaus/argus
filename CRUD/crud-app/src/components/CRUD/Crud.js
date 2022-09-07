@@ -3,10 +3,7 @@ import { NavLink, useNavigate, useParams } from "react-router-dom";
 import './style.css'
 import Button from '@mui/material/Button';
 import Input from '@mui/material/Input';
-import Tooltip from '@mui/material/Tooltip';
-import AddCircleOutlinedIcon from '@mui/icons-material/AddCircleOutlined';
 import axios from 'axios';
-import Homepage from '../homepage/Homepage';
 import Header from '../Header';
 
 
@@ -16,8 +13,6 @@ const Crud = ({setLogin}) => {
     const [error,setError] = useState('')
     const navigate = useNavigate()
 
-    // const [showUser,setShowUser] = useState([])
-
     const [getuserdata, setUserdata] = useState([])
 
     const [toggle, setToggle] = useState(false)
@@ -25,7 +20,8 @@ const Crud = ({setLogin}) => {
         userId: "",
         fname: "",
         lname: "",
-        email: ""
+        email: "",
+        mobile:""
     })
 
     const handle = (e) => {
@@ -36,20 +32,20 @@ const Crud = ({setLogin}) => {
         })
     }
 
-    const getItem = () => {
+    const getItem = async() => {
         const email = JSON.parse(localStorage.getItem('email2'))
         if(!email){
             navigate('/login')
         }else{
             // setLogin(false)
-            axios.get(`http://localhost:8000/api/${email}`).then(res => {
+            await axios.get(`http://localhost:8000/api/${email}`).then(res => {
             setUserdata(res.data.data)
         })
         }
     }
 
     const addItem = () => {
-        const { fname, lname, email} = user2
+        const { fname, lname, email,mobile} = user2
 
         const emailFromLocalStorage = JSON.parse(localStorage.getItem('email2'))
         console.log(typeof(emailFromLocalStorage))
@@ -57,7 +53,7 @@ const Crud = ({setLogin}) => {
         if(emailFromLocalStorage!==user2.email){
             setError("Email Didn't Match With Teacher's ID")
         }else{
-            if (fname && lname && email) {
+            if (fname && lname && email&&mobile) {
                 axios.post("http://localhost:8000/additem", user2).then(res => console.log(res))
             } else {
                 alert("Invalid Entries")
@@ -67,8 +63,10 @@ const Crud = ({setLogin}) => {
                 userId: '',
                 fname: '',
                 lname: '',
-                email: ''
+                email: '',
+                mobile:''
             })
+            setError("")
             getItem()
         }
     }
@@ -79,7 +77,9 @@ const Crud = ({setLogin}) => {
             setUser2({
                 fname: res.data.showData[0].fname,
                 lname: res.data.showData[0].lname,
-                email: res.data.showData[0].email
+                email: res.data.showData[0].email,
+                mobile:res.data.showData[0].mobile
+                
             })
             setToggle(true)
         })
@@ -96,29 +96,17 @@ const Crud = ({setLogin}) => {
 
 
     const showData = (id) => {
-        // axios.get(`http://localhost:8000/showApi/${id}`).then(res=>{
-        // const showuser = res.data.showData
-        //   console.log(showuser)
-        //   if(res.data._id){
-        //     return (
-        //         <>
-        //             <Homepage showuser={showuser}/>
-        //         </>
-        //     )
-        //   }
-
-        // })
         navigate('/home')
     }
 
 
     useEffect(() => {
         getItem()
-    }, [])
+    },)
 
     const editActually = async (e) => {
-        const { fname, lname, email } = user2
-        if (fname && lname && email) {
+        const { fname, lname, email,mobile } = user2
+        if (fname && lname && email&&mobile) {
             await axios.patch(`http://localhost:8000/updateApi/${id}`, user2).then(res => console.log(res.data))
         } else {
             alert("Invalid Entries")
@@ -127,7 +115,8 @@ const Crud = ({setLogin}) => {
         setUser2({
             fname: "",
             lname: "",
-            email: ""
+            email: "",
+            mobile:''
         })
         setToggle(false)
         getItem()
@@ -143,8 +132,9 @@ const Crud = ({setLogin}) => {
 
                 </div>
                 <div className="cont2 mt-3">
-                    <Input type="text" placeholder='✋ Write Your First Name' name='fname' value={user2.fname} onChange={handle} /><br />
-                    <Input type="text" placeholder='✋ Write Your Last Name' name='lname' value={user2.lname} onChange={handle} /><br />
+                    <Input type="text" placeholder='✋ Write Student First Name' name='fname' value={user2.fname} onChange={handle} /><br />
+                    <Input type="text" placeholder='✋ Write Student Last Name' name='lname' value={user2.lname} onChange={handle} /><br />
+                    <Input type="text" placeholder='✋ Write Student Mobile No.' name='mobile' value={user2.mobile} onChange={handle} /><br />
                     <Input type='text' placeholder='✋ Confirm Teacher ID' name='email' value={user2.email} onChange={handle} />
                     {error ? <p style={{color:'red'}} className='form-error'>{error}</p>:null}
 
@@ -164,6 +154,7 @@ const Crud = ({setLogin}) => {
                                 <th scope="col">ID</th>
                                 <th scope="col">First</th>
                                 <th scope="col">Last</th>
+                                <th scope="col">Mobile</th>
                                 {/* <th scope="col">Teacher ID</th> */}
                             </tr>
                         </thead>
@@ -179,7 +170,7 @@ const Crud = ({setLogin}) => {
                                                 <td>{ele.fname}</td>
                                                 {/* <td>{ele._id}</td> */}
                                                 <td>{ele.lname}</td>
-                                                {/* <td>{ele.email}</td> */}
+                                                <td>{ele.mobile}</td>
                                                 <td><NavLink to={`home/${ele._id}`}><button className='btn btn-primary' onClick={showData}>Show</button></NavLink></td>
                                                 {
                                                     !toggle ? <td><NavLink to={`${ele._id}`}><button className='btn btn-success' onClick={() => editItem(ele._id)}>Edit</button></NavLink></td> : null

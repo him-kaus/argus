@@ -20,7 +20,6 @@ const Login = ({setLoginUser}) => {
   }
 
   const login = (e) => {
-    // e.prventDefaulter();
     const {email,password} = user
     console.log(user)
     localStorage.setItem('email2',JSON.stringify(user.email))
@@ -67,7 +66,7 @@ const Login = ({setLoginUser}) => {
 
     
     <div id="formFooter">
-      <a class="underlineHover" href="#">Forgot Password?</a>
+      {/* <a class="underlineHover" href="#">Forgot Password?</a> */}
     </div>
 
   </div>
